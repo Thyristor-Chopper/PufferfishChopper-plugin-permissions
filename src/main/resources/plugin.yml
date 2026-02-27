@@ -1,41 +1,39 @@
 name: Permissions
 main: io.potatogun.opperms.Permissions
-version: 1.11
+version: 1.12
 api-version: 1.13
 depend: []
 commands:
 permissions:
-  manage-permissions.op.grant:
+  manage-permissions:
     default: op
-  manage-permissions.op.deny:
-    default: op
-  manage-permissions.op.revoke:
-    default: op
-  manage-permissions.groups.create:
-    default: op
-  manage-permissions.groups.rename:
-    default: op
-  manage-permissions.groups.delete:
-    default: op
-  manage-permissions.groups.join:
-    default: op
-  manage-permissions.groups.leave:
-    default: op
-  manage-permissions.groups.grant:
-    default: op
-  manage-permissions.groups.deny:
-    default: op
-  manage-permissions.groups.revoke:
-    default: op
-  manage-permissions.players.grant:
-    default: op
-  manage-permissions.players.deny:
-    default: op
-  manage-permissions.players.revoke:
-    default: op
-  manage-permissions.default.allow:
-    default: op
-  manage-permissions.default.deny:
-    default: op
-  manage-permissions.default.delete:
-    default: op
+    children:
+      manage-permissions.op: true
+      manage-permissions.groups: true
+      manage-permissions.players: true
+      manage-permissions.default: true
+  manage-permissions.op:
+    children:
+      manage-permissions.op.grant: true
+      manage-permissions.op.deny: true
+      manage-permissions.op.revoke: true
+  manage-permissions.groups:
+    children:
+      manage-permissions.groups.create: true
+      manage-permissions.groups.rename: true
+      manage-permissions.groups.delete: true
+      manage-permissions.groups.join: true
+      manage-permissions.groups.leave: true
+      manage-permissions.groups.grant: true
+      manage-permissions.groups.deny: true
+      manage-permissions.groups.revoke: true
+  manage-permissions.players:
+    children:
+      manage-permissions.players.grant: true
+      manage-permissions.players.deny: true
+      manage-permissions.players.revoke: true
+  manage-permissions.default:
+    children:
+      manage-permissions.default.allow: true
+      manage-permissions.default.deny: true
+      manage-permissions.default.delete: true

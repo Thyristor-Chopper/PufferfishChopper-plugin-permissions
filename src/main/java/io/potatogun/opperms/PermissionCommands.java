@@ -145,41 +145,72 @@ public class PermissionCommands {
 	    };
 		
         commandDispatcher.register(Commands.literal("permissions")
-        	.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.*"))
+        	.requires((CommandSourceStack source) -> {
+				if(hasPermissions(source, "manage-permissions.*")) return true;
+				if(hasPermissions(source, "manage-permissions.op.*")) return true;
+				if(hasPermissions(source, "manage-permissions.op.grant")) return true;
+				if(hasPermissions(source, "manage-permissions.op.deny")) return true;
+				if(hasPermissions(source, "manage-permissions.op.revoke")) return true;
+				if(hasPermissions(source, "manage-permissions.groups.*")) return true;
+				if(hasPermissions(source, "manage-permissions.groups.create")) return true;
+				if(hasPermissions(source, "manage-permissions.groups.rename")) return true;
+				if(hasPermissions(source, "manage-permissions.groups.delete")) return true;
+				if(hasPermissions(source, "manage-permissions.groups.join")) return true;
+				if(hasPermissions(source, "manage-permissions.groups.leave")) return true;
+				if(hasPermissions(source, "manage-permissions.groups.grant")) return true;
+				if(hasPermissions(source, "manage-permissions.groups.deny")) return true;
+				if(hasPermissions(source, "manage-permissions.groups.revoke")) return true;
+				if(hasPermissions(source, "manage-permissions.players.*")) return true;
+				if(hasPermissions(source, "manage-permissions.players.grant")) return true;
+				if(hasPermissions(source, "manage-permissions.players.deny")) return true;
+				if(hasPermissions(source, "manage-permissions.players.revoke")) return true;
+				if(hasPermissions(source, "manage-permissions.default.*")) return true;
+				if(hasPermissions(source, "manage-permissions.default.allow")) return true;
+				if(hasPermissions(source, "manage-permissions.default.deny")) return true;
+				if(hasPermissions(source, "manage-permissions.default.delete")) return true;
+				return false;
+			})
         	
         	// 개별 플레이어 권한
         	.then(Commands.literal("grant")
-        		.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.players.grant"))
+        		.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.players.grant") || hasPermissions(source, "manage-permissions.players.*") || hasPermissions(source, "manage-permissions.*"))
         		.then(Commands.argument("targets", EntityArgument.players())
         			.then(Commands.argument("permission", StringArgumentType.greedyString())
         				.executes((CommandContext<CommandSourceStack> context) -> setPlayerPermission(context.getSource(), EntityArgument.getPlayers(context, "targets"), StringArgumentType.getString(context, "permission"), true, "권한을 부여하였습니다")))))
         	.then(Commands.literal("deny")
-        		.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.players.deny"))
+        		.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.players.deny") || hasPermissions(source, "manage-permissions.players.*") || hasPermissions(source, "manage-permissions.*"))
         		.then(Commands.argument("targets", EntityArgument.players())
         			.then(Commands.argument("permission", StringArgumentType.greedyString())
         				.executes((CommandContext<CommandSourceStack> context) -> setPlayerPermission(context.getSource(), EntityArgument.getPlayers(context, "targets"), StringArgumentType.getString(context, "permission"), false, "권한을 거부하였습니다")))))
         	.then(Commands.literal("revoke")
-        		.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.players.revoke"))
+        		.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.players.revoke") || hasPermissions(source, "manage-permissions.players.*") || hasPermissions(source, "manage-permissions.*"))
         		.then(Commands.argument("targets", EntityArgument.players())
         			.then(Commands.argument("permission", StringArgumentType.greedyString())
         				.executes((CommandContext<CommandSourceStack> context) -> setPlayerPermission(context.getSource(), EntityArgument.getPlayers(context, "targets"), StringArgumentType.getString(context, "permission"), null, "권한 설정을 삭제하였습니다")))))
         	
         	// 오피 권한
     		.then(Commands.literal("op")
-        		.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.op.*"))
+        		.requires((CommandSourceStack source) -> {
+					if(hasPermissions(source, "manage-permissions.*")) return true;
+					if(hasPermissions(source, "manage-permissions.op.*")) return true;
+					if(hasPermissions(source, "manage-permissions.op.grant")) return true;
+					if(hasPermissions(source, "manage-permissions.op.deny")) return true;
+					if(hasPermissions(source, "manage-permissions.op.revoke")) return true;
+					return false;
+				})
     			.then(Commands.argument("level", IntegerArgumentType.integer(1, 4))
 					.then(Commands.literal("grant")
-		        		.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.op.grant"))
+		        		.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.op.grant") || hasPermissions(source, "manage-permissions.op.*") || hasPermissions(source, "manage-permissions.*"))
 		    			.then(Commands.argument("permission", StringArgumentType.greedyString())
 		    				.suggests(OP_DENIED_PERMISSIONS)
 		    				.executes((CommandContext<CommandSourceStack> context) -> setOpPermission(context.getSource(), IntegerArgumentType.getInteger(context, "level"), StringArgumentType.getString(context, "permission"), true, "권한을 부여하였습니다"))))
 	    			.then(Commands.literal("deny")
-			        	.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.op.deny"))
+			        	.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.op.deny") || hasPermissions(source, "manage-permissions.op.*") || hasPermissions(source, "manage-permissions.*"))
 	    				.then(Commands.argument("permission", StringArgumentType.greedyString())
 	    					.suggests(OP_GRANTED_PERMISSIONS)
 	    					.executes((CommandContext<CommandSourceStack> context) -> setOpPermission(context.getSource(), IntegerArgumentType.getInteger(context, "level"), StringArgumentType.getString(context, "permission"), false, "권한을 거부하였습니다"))))
 	    			.then(Commands.literal("revoke")
-			        	.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.op.revoke"))
+			        	.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.op.revoke") || hasPermissions(source, "manage-permissions.op.*") || hasPermissions(source, "manage-permissions.*"))
 	    				.then(Commands.argument("permission", StringArgumentType.greedyString())
 	    					.suggests(OP_DEFINED_PERMISSIONS)
 	    					.executes((CommandContext<CommandSourceStack> context) -> setOpPermission(context.getSource(), IntegerArgumentType.getInteger(context, "level"), StringArgumentType.getString(context, "permission"), null, "권한 설정을 삭제하였습니다")))))
@@ -187,52 +218,64 @@ public class PermissionCommands {
         	
     		// 그룹 권한
     		.then(Commands.literal("group")
-    				.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.groups.*"))
+				.requires((CommandSourceStack source) -> {
+					if(hasPermissions(source, "manage-permissions.*")) return true;
+					if(hasPermissions(source, "manage-permissions.groups.*")) return true;
+					if(hasPermissions(source, "manage-permissions.groups.create")) return true;
+					if(hasPermissions(source, "manage-permissions.groups.rename")) return true;
+					if(hasPermissions(source, "manage-permissions.groups.delete")) return true;
+					if(hasPermissions(source, "manage-permissions.groups.join")) return true;
+					if(hasPermissions(source, "manage-permissions.groups.leave")) return true;
+					if(hasPermissions(source, "manage-permissions.groups.grant")) return true;
+					if(hasPermissions(source, "manage-permissions.groups.deny")) return true;
+					if(hasPermissions(source, "manage-permissions.groups.revoke")) return true;
+					return false;
+				})
     			.then(Commands.literal("create")
-		        	.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.groups.create"))
+		        	.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.groups.create") || hasPermissions(source, "manage-permissions.groups.*") || hasPermissions(source, "manage-permissions.*"))
     				.then(Commands.argument("id", StringArgumentType.string())
     					.executes((CommandContext<CommandSourceStack> context) -> createGroup(context.getSource(), StringArgumentType.getString(context, "id"), null))
     					.then(Commands.argument("name", StringArgumentType.greedyString())
     						.executes((CommandContext<CommandSourceStack> context) -> createGroup(context.getSource(), StringArgumentType.getString(context, "id"), StringArgumentType.getString(context, "name"))))))
     			.then(Commands.literal("delete")
-    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.groups.delete"))
+    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.groups.delete") || hasPermissions(source, "manage-permissions.groups.*") || hasPermissions(source, "manage-permissions.*"))
     				.then(Commands.argument("group", StringArgumentType.string())
     					.suggests(ALL_GROUPS)
     					.executes((CommandContext<CommandSourceStack> context) -> deleteGroup(context.getSource(), StringArgumentType.getString(context, "group")))))
     			.then(Commands.literal("rename")
-    		        	.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.groups.rename"))
+    		        	.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.groups.rename") || hasPermissions(source, "manage-permissions.groups.*") || hasPermissions(source, "manage-permissions.*"))
     				.then(Commands.argument("group", StringArgumentType.string())
         				.suggests(ALL_GROUPS)
     					.then(Commands.argument("name", StringArgumentType.greedyString())
     						.executes((CommandContext<CommandSourceStack> context) -> renameGroup(context.getSource(), StringArgumentType.getString(context, "group"), StringArgumentType.getString(context, "name"))))))
     			.then(Commands.literal("join")
-    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.groups.join"))
+    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.groups.join") || hasPermissions(source, "manage-permissions.groups.*") || hasPermissions(source, "manage-permissions.*"))
     				.then(Commands.argument("targets", EntityArgument.players())
     					.then(Commands.argument("group", StringArgumentType.string())
     	    				.suggests(ALL_GROUPS)
     						.executes((CommandContext<CommandSourceStack> context) -> joinGroup(context.getSource(), EntityArgument.getPlayers(context, "targets"), StringArgumentType.getString(context, "group"))))))
     			.then(Commands.literal("leave")
-    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.groups.leave"))
+    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.groups.leave") || hasPermissions(source, "manage-permissions.groups.*") || hasPermissions(source, "manage-permissions.*"))
 					.then(Commands.argument("targets", EntityArgument.players())
     					.then(Commands.argument("group", StringArgumentType.string())
     	        			.suggests(ALL_GROUPS)
     						.executes((CommandContext<CommandSourceStack> context) -> leaveGroup(context.getSource(), EntityArgument.getPlayers(context, "targets"), StringArgumentType.getString(context, "group"))))))
     			.then(Commands.literal("grant")
-    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.groups.grant"))
+    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.groups.grant") || hasPermissions(source, "manage-permissions.groups.*") || hasPermissions(source, "manage-permissions.*"))
     				.then(Commands.argument("group", StringArgumentType.string())
         				.suggests(ALL_GROUPS)
     					.then(Commands.argument("permission", StringArgumentType.greedyString())
     						.suggests(GROUP_DENIED_PERMISSIONS)
     						.executes((CommandContext<CommandSourceStack> context) -> setGroupPermission(context.getSource(), StringArgumentType.getString(context, "group"), StringArgumentType.getString(context, "permission"), true, "권한을 부여하였습니다")))))
     			.then(Commands.literal("deny")
-    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.groups.deny"))
+    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.groups.deny") || hasPermissions(source, "manage-permissions.groups.*") || hasPermissions(source, "manage-permissions.*"))
     				.then(Commands.argument("group", StringArgumentType.string())
             			.suggests(ALL_GROUPS)
     					.then(Commands.argument("permission", StringArgumentType.greedyString())
     						.suggests(GROUP_GRANTED_PERMISSIONS)
     						.executes((CommandContext<CommandSourceStack> context) -> setGroupPermission(context.getSource(), StringArgumentType.getString(context, "group"), StringArgumentType.getString(context, "permission"), false, "권한을 거부하였습니다")))))
     			.then(Commands.literal("revoke")
-    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.groups.revoke"))
+    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.groups.revoke") || hasPermissions(source, "manage-permissions.groups.*") || hasPermissions(source, "manage-permissions.*"))
     				.then(Commands.argument("group", StringArgumentType.string())
             			.suggests(ALL_GROUPS)
     					.then(Commands.argument("permission", StringArgumentType.greedyString())
@@ -242,19 +285,26 @@ public class PermissionCommands {
     			
     		// 기본 권한
     		.then(Commands.literal("default")
-    			.requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.default.*"))
+    			.requires((CommandSourceStack source) -> {
+					if(hasPermissions(source, "manage-permissions.*")) return true;
+					if(hasPermissions(source, "manage-permissions.default.*")) return true;
+					if(hasPermissions(source, "manage-permissions.default.allow")) return true;
+					if(hasPermissions(source, "manage-permissions.default.deny")) return true;
+					if(hasPermissions(source, "manage-permissions.default.delete")) return true;
+					return false;
+				})
     			.then(Commands.literal("allow")
-    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.default.allow"))
+    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.default.allow") || hasPermissions(source, "manage-permissions.default.*") || hasPermissions(source, "manage-permissions.*"))
 					.then(Commands.argument("permission", StringArgumentType.greedyString())
 						.suggests(DEFAULT_DENIED_PERMISSIONS)
 						.executes((CommandContext<CommandSourceStack> context) -> setDefaultPermission(context.getSource(), StringArgumentType.getString(context, "permission"), true, "권한을 허용하였습니다"))))
     			.then(Commands.literal("deny")
-    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.default.deny"))
+    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.default.deny") || hasPermissions(source, "manage-permissions.default.*") || hasPermissions(source, "manage-permissions.*"))
 					.then(Commands.argument("permission", StringArgumentType.greedyString())
 						.suggests(DEFAULT_GRANTED_PERMISSIONS)
 						.executes((CommandContext<CommandSourceStack> context) -> setDefaultPermission(context.getSource(), StringArgumentType.getString(context, "permission"), false, "권한을 거부하였습니다"))))
     			.then(Commands.literal("delete")
-    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.default.delete"))
+    		        .requires((CommandSourceStack source) -> hasPermissions(source, "manage-permissions.default.delete") || hasPermissions(source, "manage-permissions.default.*") || hasPermissions(source, "manage-permissions.*"))
 					.then(Commands.argument("permission", StringArgumentType.greedyString())
 						.suggests(DEFAULT_DEFINED_PERMISSIONS)
 						.executes((CommandContext<CommandSourceStack> context) -> setDefaultPermission(context.getSource(), StringArgumentType.getString(context, "permission"), null, "권한 설정을 삭제하였습니다"))))

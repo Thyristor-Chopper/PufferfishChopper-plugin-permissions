@@ -43,6 +43,8 @@ public class Permissions extends JavaPlugin implements Listener {
 		PermissionCommands.register(dispatcher);
 		
 		getServer().getPluginManager().registerEvents(this, this);
+		
+		refreshPermissions();
 	}
 	
 	protected void refreshPermissions() {

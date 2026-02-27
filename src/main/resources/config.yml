@@ -1,0 +1,10 @@
+op-permissions:
+  op-level-1: {}
+  op-level-2: {}
+  op-level-3: {}
+  op-level-4: {}
+permission-groups: {}
+player-groups: {}
+player-permissions: {}
+default-permissions: {}
+op-permission-cascade: false

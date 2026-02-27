@@ -1,0 +1,41 @@
+name: Permissions
+main: io.potatogun.opperms.Permissions
+version: 1.11
+api-version: 1.13
+depend: []
+commands:
+permissions:
+  manage-permissions.op.grant:
+    default: op
+  manage-permissions.op.deny:
+    default: op
+  manage-permissions.op.revoke:
+    default: op
+  manage-permissions.groups.create:
+    default: op
+  manage-permissions.groups.rename:
+    default: op
+  manage-permissions.groups.delete:
+    default: op
+  manage-permissions.groups.join:
+    default: op
+  manage-permissions.groups.leave:
+    default: op
+  manage-permissions.groups.grant:
+    default: op
+  manage-permissions.groups.deny:
+    default: op
+  manage-permissions.groups.revoke:
+    default: op
+  manage-permissions.players.grant:
+    default: op
+  manage-permissions.players.deny:
+    default: op
+  manage-permissions.players.revoke:
+    default: op
+  manage-permissions.default.allow:
+    default: op
+  manage-permissions.default.deny:
+    default: op
+  manage-permissions.default.delete:
+    default: op
